@@ -590,6 +590,8 @@ require('lazy').setup({
         html = {},
         jqls = {},
         jsonls = {},
+        markdown_oxide = {},
+        markdownlint = {},
         powershell_es = {},
         pylsp = {},
         pyright = {},
@@ -597,7 +599,10 @@ require('lazy').setup({
         ruby_lsp = {},
         sqlls = {},
         swift_mesonls = {},
-        terraformls = {},
+        terraformls = {
+          cmd = { 'terraform-ls', 'serve' },
+          filetypes = { 'terraform', 'tf', 'tfvars', 'tfstate' },
+        },
         tsserver = {},
         textlsp = {},
         tflint = {},
@@ -656,14 +661,6 @@ require('lazy').setup({
           end,
         },
       }
-
-      require('lspconfig').terraformls.setup {}
-      vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-        pattern = { '*.tf', '*.tfvars' },
-        callback = function()
-          vim.lsp.buf.format()
-        end,
-      })
     end,
   },
 
