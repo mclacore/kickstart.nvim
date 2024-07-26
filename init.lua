@@ -229,8 +229,6 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'github/copilot.vim',
-  -- 'leoluz/nvim-dap-go',
-  -- 'theHamsta/nvim-dap-virtual-text',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -579,8 +577,31 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
+        azure_pipelines_ls = {},
+        bashls = {},
+        bicep = {},
+        dockerls = {},
+        elixirls = {},
+        eslint = {},
+        golangci_lint_ls = {},
+        gopls = {},
+        graphql = {},
+        helm_ls = {},
+        html = {},
+        jqls = {},
+        jsonls = {},
+        powershell_es = {},
+        pylsp = {},
+        pyright = {},
+        quick_lint_js = {},
+        ruby_lsp = {},
+        sqlls = {},
+        swift_mesonls = {},
+        terraformls = {},
+        tsserver = {},
+        textlsp = {},
+        tflint = {},
+        yamlls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -683,14 +704,14 @@ require('lazy').setup({
     },
   },
 
-  { -- Markdown Preview
-    'iamcco/markdown-preview.nvim',
-    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
-    ft = { 'markdown' },
-    build = function()
-      vim.fn['mkdp#util#install']()
-    end,
-  },
+  -- { -- Markdown Preview
+  --   'iamcco/markdown-preview.nvim',
+  --   cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+  --   ft = { 'markdown' },
+  --   build = function()
+  --     vim.fn['mkdp#util#install']()
+  --   end,
+  -- },
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
