@@ -669,7 +669,7 @@ require('lazy').setup({
     lazy = false,
     keys = {
       {
-        '<leader>f',
+        '<leader>mf',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
