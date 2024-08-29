@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Azure.Bicep.Local.Extension</name>
+    </assembly>
+    <members>
+        <member name="T:Bicep.Local.Extension.Rpc.ExtensionReflection">
+            <summary>Holder for reflection information generated from extension.proto</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.ExtensionReflection.Descriptor">
+            <summary>File descriptor for extension.proto</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceSpecification.ConfigFieldNumber">
+            <summary>Field number for the "config" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.ResourceSpecification.HasConfig">
+            <summary>Gets whether the "config" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.ResourceSpecification.ClearConfig">
+            <summary>Clears the value of the "config" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceSpecification.TypeFieldNumber">
+            <summary>Field number for the "type" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceSpecification.ApiVersionFieldNumber">
+            <summary>Field number for the "apiVersion" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.ResourceSpecification.HasApiVersion">
+            <summary>Gets whether the "apiVersion" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.ResourceSpecification.ClearApiVersion">
+            <summary>Clears the value of the "apiVersion" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceSpecification.PropertiesFieldNumber">
+            <summary>Field number for the "properties" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceReference.IdentifiersFieldNumber">
+            <summary>Field number for the "identifiers" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceReference.ConfigFieldNumber">
+            <summary>Field number for the "config" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.ResourceReference.HasConfig">
+            <summary>Gets whether the "config" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.ResourceReference.ClearConfig">
+            <summary>Clears the value of the "config" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceReference.TypeFieldNumber">
+            <summary>Field number for the "type" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ResourceReference.ApiVersionFieldNumber">
+            <summary>Field number for the "apiVersion" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.ResourceReference.HasApiVersion">
+            <summary>Gets whether the "apiVersion" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.ResourceReference.ClearApiVersion">
+            <summary>Clears the value of the "apiVersion" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.LocalExtensibilityOperationResponse.ResourceFieldNumber">
+            <summary>Field number for the "resource" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.LocalExtensibilityOperationResponse.ErrorDataFieldNumber">
+            <summary>Field number for the "errorData" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Resource.TypeFieldNumber">
+            <summary>Field number for the "type" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Resource.ApiVersionFieldNumber">
+            <summary>Field number for the "apiVersion" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.Resource.HasApiVersion">
+            <summary>Gets whether the "apiVersion" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.Resource.ClearApiVersion">
+            <summary>Clears the value of the "apiVersion" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Resource.IdentifiersFieldNumber">
+            <summary>Field number for the "identifiers" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Resource.PropertiesFieldNumber">
+            <summary>Field number for the "properties" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Resource.StatusFieldNumber">
+            <summary>Field number for the "status" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.Resource.HasStatus">
+            <summary>Gets whether the "status" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.Resource.ClearStatus">
+            <summary>Clears the value of the "status" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ErrorData.ErrorFieldNumber">
+            <summary>Field number for the "error" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Error.CodeFieldNumber">
+            <summary>Field number for the "code" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Error.TargetFieldNumber">
+            <summary>Field number for the "target" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.Error.HasTarget">
+            <summary>Gets whether the "target" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.Error.ClearTarget">
+            <summary>Clears the value of the "target" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Error.MessageFieldNumber">
+            <summary>Field number for the "message" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Error.DetailsFieldNumber">
+            <summary>Field number for the "details" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.Error.InnerErrorFieldNumber">
+            <summary>Field number for the "innerError" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.Error.HasInnerError">
+            <summary>Gets whether the "innerError" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.Error.ClearInnerError">
+            <summary>Clears the value of the "innerError" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ErrorDetail.CodeFieldNumber">
+            <summary>Field number for the "code" field.</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ErrorDetail.TargetFieldNumber">
+            <summary>Field number for the "target" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.ErrorDetail.HasTarget">
+            <summary>Gets whether the "target" field is set</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.ErrorDetail.ClearTarget">
+            <summary>Clears the value of the "target" field</summary>
+        </member>
+        <member name="F:Bicep.Local.Extension.Rpc.ErrorDetail.MessageFieldNumber">
+            <summary>Field number for the "message" field.</summary>
+        </member>
+        <member name="P:Bicep.Local.Extension.Rpc.BicepExtension.Descriptor">
+            <summary>Service descriptor</summary>
+        </member>
+        <member name="T:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionBase">
+            <summary>Base class for server-side implementations of BicepExtension</summary>
+        </member>
+        <member name="T:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionClient">
+            <summary>Client for BicepExtension</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionClient.#ctor(Grpc.Core.ChannelBase)">
+            <summary>Creates a new client for BicepExtension</summary>
+            <param name="channel">The channel to use to make remote calls.</param>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionClient.#ctor(Grpc.Core.CallInvoker)">
+            <summary>Creates a new client for BicepExtension that uses a custom <c>CallInvoker</c>.</summary>
+            <param name="callInvoker">The callInvoker to use to make remote calls.</param>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionClient.#ctor">
+            <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionClient.#ctor(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Protected constructor to allow creation of configured clients.</summary>
+            <param name="configuration">The client configuration.</param>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionClient.NewInstance(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BindService(Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionBase)">
+            <summary>Creates service definition that can be registered with a server</summary>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="M:Bicep.Local.Extension.Rpc.BicepExtension.BindService(Grpc.Core.ServiceBinderBase,Bicep.Local.Extension.Rpc.BicepExtension.BicepExtensionBase)">
+            <summary>Register service method with a service binder with or without implementation. Useful when customizing the service binding logic.
+            Note: this method is part of an experimental API that can change or be removed without any prior notice.</summary>
+            <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+    </members>
+</doc>

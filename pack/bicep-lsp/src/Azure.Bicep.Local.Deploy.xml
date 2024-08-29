@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Azure.Bicep.Local.Deploy</name>
+    </assembly>
+    <members>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.Error">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.ErrorData">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.ErrorDetail">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.Resource">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.LocalExtensibilityOperationResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.JsonPointer">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.IListErrorDetail">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.JsonObject">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Bicep.Local.Deploy.Extensibility.LocalExtensibilityOperationResponseContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

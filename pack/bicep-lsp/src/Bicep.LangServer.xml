@@ -1,0 +1,819 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Bicep.LangServer</name>
+    </assembly>
+    <members>
+        <member name="T:Bicep.LanguageServer.CompilationManager.CompilationContext">
+            <summary>
+            Represents a compilation context that successfully produced a compilation
+            (the compilation itself may have errors or warnings in the semantic model)
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.CompilationManager.CompilationContextBase">
+            <summary>
+            Base class for both successful and unsafe compilation contexts.
+            It allows us to propagate source file kind for untitled files
+            in cases of fatal errors for better recovery experience in the
+            editor.
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.CompilationManager.UnsafeCompilationContext">
+            <summary>
+            Represents a compilation context that failed to produce a compilation
+            due to an unhandled exception. This only happens due a code bug, but
+            we handle it in a special way to allow for better recovery of the user
+            experience as the user is typing. (As rare as they are, fatal exceptions
+            are typically due to a specific combination of characters in the source file.)
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.BicepCompletionContext.FindTriviaMatchingOffset(Bicep.Core.Syntax.ProgramSyntax,System.Int32)">
+            <summary>
+            Returnes trivia which span contains the specified offset.
+            </summary>
+            <param name="syntax">The program node</param>
+            <param name="offset">The offset</param>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.BicepCompletionContext.IsInnerExpressionContext(System.Collections.Generic.List{Bicep.Core.Syntax.SyntaxBase},System.Int32)">
+            <summary>
+            Determines if we are inside an expression. Will not produce a correct result if context kind is set is already set to something.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.None">
+            <summary>
+            No specific information about the current completion context is available.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TopLevelDeclarationStart">
+            <summary>
+            The current location represents the beginning of a declaration.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ParameterType">
+            <summary>
+            The current location needs a parameter type.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.OutputType">
+            <summary>
+            The current location needs an output type.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.Expression">
+            <summary>
+            The current location needs an expression
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ObjectPropertyName">
+            <summary>
+            The current location needs an object property name.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.PropertyValue">
+            <summary>
+            The current location needs a property value.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ArrayItem">
+            <summary>
+            The current location needs an array item.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ResourceType">
+            <summary>
+            The current location needs a resource type string.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ModulePath">
+            <summary>
+            The current location needs a module path (local or remote)
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ResourceBody">
+            <summary>
+            The current location needs a resource body.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ModuleBody">
+            <summary>
+            The current location needs a module body.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.MemberAccess">
+            <summary>
+            The current location is accessing properties or methods.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ResourceAccess">
+            <summary>
+            The current location is accessing a nested resource.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TargetScope">
+            <summary>
+            The current location needs target scope value.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ArrayIndex">
+            <summary>
+            The current location needs an array index.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.DecoratorName">
+            <summary>
+            The current location needs a decorator name.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.NestedResourceDeclarationStart">
+            <summary>
+            The current location could be the start of a nested resource declaration.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.VariableValue">
+            <summary>
+            The current location needs a variable value.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.OutputValue">
+            <summary>
+            The current location needs an output value.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ParameterDefaultValue">
+            <summary>
+            The current location needs a parameter default value.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.NotValid">
+            <summary>
+            The current location is not a valid scope where we can offer completions.
+            </summary>
+            <remarks>This is used to prevent fallback to Expression kind</remarks>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ResourceTypeFollower">
+            <summary>
+            The current location is after the resource type.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ObjectPropertyColonExists">
+            <summary>
+            This is used in conjunction with ObjectPropertyName and indicates that the colon token
+            is present in the ObjectPropertySyntax and does not need to be included in the completion.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ExpectingImportWithOrAsKeyword">
+            <summary>
+            We're at this place in an import statement: 'import foo |'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ExpectingImportSpecification">
+            <summary>
+            We're at this place in an import statement: 'import | as foo'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.FunctionArgument">
+            <summary>
+            We're inside a function parentheses: 'someFunc(|)'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.DisableNextLineDiagnosticsDirectiveStart">
+            <summary>
+            The current location is after # sign.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.DisableNextLineDiagnosticsCodes">
+            <summary>
+            The current location is after '#disable-next-line |'.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ExpectingImportConfig">
+            <summary>
+            We're at this place in an import statement: 'import foo as bar |'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.UsingFilePath">
+            <summary>
+            The current location needs a bicep file path completion for using declaration
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ParamIdentifier">
+            <summary>
+            The current location needs a parameter identifier completion from corresponding bicep file
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ParamValue">
+            <summary>
+            The current location needs a parameter value completion from allowed values in corresponding bicep file
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TypeDeclarationValue">
+            <summary>
+            The current location is after the assignment operator in a type declaration: 'type foo = |'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ObjectTypePropertyValue">
+            <summary>
+            The current location is after the assignment operator in a type declaration: 'type foo = |'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.UnionTypeMember">
+            <summary>
+            The current location is after a pipe separator within a union type: `type foo = 'foo'|'bar'|ǂ`
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ExpectingImportAsKeyword">
+            <summary>
+            We're at this place in an import statement: 'import 'foo@1.0.0' with { foo: true } as |'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.OutputTypeFollower">
+            <summary>
+            The current location is after the output type.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ExpectsResourceSymbolicReference">
+            <summary>
+            The current location can accept a symbolic reference to a resource.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TypedLocalVariableType">
+            <summary>
+            Cursor is on a typed lambda argument type.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TypedLambdaOutputType">
+            <summary>
+            Cursor is on a typed lambda output type.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TestPath">
+            <summary>
+            The current location needs a module path (local or remote)
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.AssertValue">
+            <summary>
+            The current location needs an assert value.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ImportIdentifier">
+            <summary>
+            The current location will accept an import identifier ('{}' or '* as foo')
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ImportedSymbolIdentifier">
+            <summary>
+            The current location in an import statement can be completed with a symbol that can be imported from the statement target.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.ExpectingImportFromKeyword">
+            <summary>
+            The current location in an import statement requires the <code>from</code> contextual keyword
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TestBody">
+            <summary>
+            The current location needs a test body.
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TypeArgument">
+            <summary>
+            We're inside the chevrons in a parameterized type: 'typeName&lt;|&gt;'
+            </summary>
+        </member>
+        <member name="F:Bicep.LanguageServer.Completions.BicepCompletionContextKind.TypeMemberAccess">
+            <summary>
+            The current location is accessing properties or elements of a type.
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.BicepCompletionProvider.CreateContextualSnippetCompletion(System.String,System.String,System.String,OmniSharp.Extensions.LanguageServer.Protocol.Models.Range,Bicep.LanguageServer.Completions.CompletionPriority,System.Boolean)">
+            <summary>
+            Creates a completion with a contextual snippet. This will look like a snippet to the user.
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.BicepCompletionProvider.CreateContextualSnippetCompletion(System.String,System.String,System.String,OmniSharp.Extensions.LanguageServer.Protocol.Models.Range,OmniSharp.Extensions.LanguageServer.Protocol.Models.Command,Bicep.LanguageServer.Completions.CompletionPriority,System.Boolean,System.String)">
+            <summary>
+            Creates a completion with a contextual snippet with command option. This will look like a snippet to the user.
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.BicepCompletionProvider.CreateContextualSnippetCompletion(System.String,System.String,System.String,OmniSharp.Extensions.LanguageServer.Protocol.Models.Range,OmniSharp.Extensions.LanguageServer.Protocol.Models.TextEditContainer,Bicep.LanguageServer.Completions.CompletionPriority)">
+            <summary>
+            Creates a completion with a contextual snippet. This will look like a snippet to the user.
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Completions.CompletionPriority">
+            <summary>
+            Represents the priority of the completion. The higher the properity (lower value),
+            the more likely the completion will be shown at the top of the list in VS code and other LSP clients.
+            </summary>
+            <remarks>The enum values are used to calculate completion sortText.</remarks>
+        </member>
+        <member name="T:Bicep.LanguageServer.Completions.EditorCommands">
+            <summary>
+            Constants for editor commands to be used with completions.
+            </summary>
+            <remarks>This is very VS-code specific. An editor-agnostic solution does not currently exist.</remarks>
+        </member>
+        <member name="T:Bicep.LanguageServer.Completions.ModuleReferenceCompletionProvider">
+            <summary>
+            Provides completions for remote (public or private) module references, e.g. br/public:modulePath:version
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.ModuleReferenceCompletionProvider.IsOciArtifactRegistryReference(System.String)">
+            <summary>
+            True if is an OCI module reference (i.e., it starts with br: or br/)
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.ModuleReferenceCompletionProvider.IsPrivateAcrRegistryReference(System.String,System.String@)">
+            <summary>
+            True if a direct reference to a private ACR registry (i.e. not pointing to the Microsoft public bicep registry)
+            </summary>
+            <param name="replacementTextWithTrimmedEnd"></param>
+            <param name="registry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.ResourceTypeSearchKeywords.RegexResourceType">
+            <remarks>
+            Pattern:<br/>
+            <code>'(?&lt;resourceType&gt;[a-z][a-z0-9.]+/[a-z0-9./]+)@[a-z0-9-]+'</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match '\''.<br/>
+            ○ "resourceType" capture group.<br/>
+                ○ Match a character in the set [A-Za-z\u212A].<br/>
+                ○ Match a character in the set [.0-9A-Za-z\u212A] atomically at least once.<br/>
+                ○ Match '/'.<br/>
+                ○ Match a character in the set [.-9A-Za-z\u212A] atomically at least once.<br/>
+            ○ Match '@'.<br/>
+            ○ Match a character in the set [-0-9A-Za-z\u212A] atomically at least once.<br/>
+            ○ Match '\''.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:Bicep.LanguageServer.Completions.SyntaxMatcher.FindNodesMatchingOffset(Bicep.Core.Syntax.SyntaxBase,System.Int32)">
+            <summary>
+            Returns nodes whose span contains the specified offset from least specific to the most specific.
+            </summary>
+            <param name="syntax">The program node</param>
+            <param name="offset">The offset</param>
+        </member>
+        <member name="T:Bicep.LanguageServer.Configuration.JsonEditor">
+            <summary>
+            Allows for some limited JSON text manipulation without destroying commands or existing whitespace
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Deploy.DeploymentHelper.StartDeploymentAsync(Bicep.LanguageServer.Deploy.IDeploymentCollectionProvider,Azure.ResourceManager.ArmClient,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Text.Json.JsonElement,Bicep.LanguageServer.Deploy.IDeploymentOperationsCache)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Bicep.LanguageServer.Deploy.DeploymentHelper.WaitForDeploymentCompletionAsync(System.String,System.String,Bicep.LanguageServer.Deploy.IDeploymentOperationsCache)">
+            <summary>
+            Waits for deployment operation to complete
+            </summary>
+            <param name="deploymentId">deployment id</param>
+            <param name="documentPath">path to bicep file used in deployment</param>
+            <param name="deploymentOperationsCache"><see cref="T:Bicep.LanguageServer.Deploy.IDeploymentOperationsCache"/></param>
+            <returns><see cref="T:Bicep.LanguageServer.Handlers.BicepDeploymentWaitForCompletionResponse"/></returns>
+        </member>
+        <member name="M:Bicep.LanguageServer.Deploy.IDeploymentHelper.StartDeploymentAsync(Bicep.LanguageServer.Deploy.IDeploymentCollectionProvider,Azure.ResourceManager.ArmClient,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Text.Json.JsonElement,Bicep.LanguageServer.Deploy.IDeploymentOperationsCache)">
+            <summary>
+            Starts a deployment at provided target scope and returns <see cref="T:Bicep.LanguageServer.Handlers.BicepDeploymentStartResponse"/>.
+            </summary>
+            <param name="deploymentCollectionProvider">deployment collection provider</param>
+            <param name="armClient">arm client</param>
+            <param name="documentPath">path to bicep file used in deployment</param>
+            <param name="template">template used in deployment</param>
+            <param name="id">id string to create the ResourceIdentifier from</param>
+            <param name="scope">target scope</param>
+            <param name="location">location to store the deployment data</param>
+            <param name="deploymentId">deployment id</param>
+            <param name="portalUrl">azure management portal URL</param>
+            <param name="deploymentName">deployment name</param>
+            <param name="parametersFileContents">contents of parameter file used in deployment</param>
+            <param name="deploymentOperationsCache">deployment operations cache that needs to be updated</param>
+            <returns><see cref="T:Bicep.LanguageServer.Handlers.BicepDeploymentStartResponse"/></returns>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepCreateConfigFileHandler">
+            <summary>
+            Handles a request from the client to create a bicep configuration file
+            </summary>
+            <remarks>
+            Using ExecuteTypedResponseCommandHandlerBase instead of IJsonRpcRequestHandler because IJsonRpcRequestHandler will throw "Content modified" if text changes are detected, and for this command
+            that is expected.
+            </remarks>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepDecompileCommandHandler">
+            <summary>
+            Handles a request from the client to decompile a JSON file for given a file path, creating one or more bicep files
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepDecompileForPasteCommandHandler">
+            <summary>
+            Handles a request from the client to analyze/decompile a JSON fragment for possible conversion into Bicep (for pasting into a Bicep file)
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.BicepDecompileForPasteCommandHandler.TryConstructFullJsonTemplate(System.String)">
+            <summary>
+            If the given JSON matches a pattern that we know how to paste as Bicep, convert it into a full template to be decompiled
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.BicepDecompileForPasteCommandHandler.ConstructFullTemplateFromSequenceOfResources(Newtonsoft.Json.Linq.JObject,Newtonsoft.Json.JsonTextReader)">
+             <summary>
+             Handles an optionally comma-separated sequence of JSON resource objects:
+            
+               {
+                 apiVersion: "..."
+                 ...
+               },
+               {
+                 apiVersion: "..."
+                 ...
+               }
+            
+             Note that this is not a valid JSON construct by itself, unless it's just a single resource
+             </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepDecompileParamsCommandHandler">
+            <summary>
+            Handles a request from the client to decompile a JSON file for given a file path, creating a bicepparam file
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepDecompileSaveCommandHandler">
+            <summary>
+            Handles saving the decompiled files from a BicepDecompileCommandHandler result (after the client asked the user whether to overwrite or create copies)
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepDeploymentParametersHandler">
+            <summary>
+            Handles getDeploymentParameters LSP request.
+            The BicepDeploymentParametersHandler returns information about deployment parameters, parameters file name and error message, if any.
+            List of <see cref="T:Bicep.LanguageServer.Handlers.BicepDeploymentParameter"/>, included in the response has informtion about the parameter e.g. name , value, if the parameter has
+            @secure() decorator, if it's missing default value/is not present in parameters file, is an expression etc
+            The above information will be used to display appropriate controls in UI.
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepDeploymentScopeRequestHandler">
+            <summary>
+            Handles getDeploymentScope LSP request.
+            The BicepDeploymentScopeRequestHandler returns targetScope, template and error message.
+            Error message would be null if provided bicep file was error free.
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.BicepDeploymentWaitForCompletionCommandHandler.#ctor(Bicep.LanguageServer.Deploy.IDeploymentOperationsCache,OmniSharp.Extensions.LanguageServer.Protocol.Server.ILanguageServerFacade,OmniSharp.Extensions.JsonRpc.ISerializer,Bicep.LanguageServer.Telemetry.ITelemetryProvider)">
+            <summary>
+            Handles "deploy/waitForCompletion" LSP request.
+            This handler waits for the deployment to complete and sends a "deploymentComplete" notification to the client.
+            This notification can be used on the client side to write success/failure messsage to the output channel without
+            blocking other commands.
+            Note: Base handler (ExecuteTypedResponseCommandHandlerBase) is serial. This blocks other commands on the client side.
+            To avoid the above issue, we changed the RequestProcessType to parallel in <see cref="T:Bicep.LanguageServer.Server"/>
+            We need to make sure changes to this handler are thread safe.
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepEditLinterRuleCommandHandler">
+            <summary>
+            Handles the internal command for code actions to edit a particular linter rule in the bicepconfig.json file
+            </summary>
+            <remarks>
+            Using ExecuteTypedCommandHandlerBase instead of IJsonRpcRequestHandler because IJsonRpcRequestHandler will throw "Content modified" if text changes are detected, and for this command
+            that is expected.
+            </remarks>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.BicepEditLinterRuleCommandHandler.SelectRuleLevelIfExists(OmniSharp.Extensions.LanguageServer.Protocol.Server.ILanguageServerFacade,Bicep.LanguageServer.Providers.IClientCapabilitiesProvider,System.String,System.String)">
+            <summary>
+            If the given rule has an entry for its error level in the configuration file, show that file and select the current
+            level value (so that the end user can immediatey edit it).
+            </summary>
+            <returns>True if the rule exists and displaying/highlighting succeeds, otherwise false.</returns>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepExternalSourceDocumentLinkHandler">
+            <summary>
+            This handles the case where the document is a source file from an external module, and we've been asked to return nested links within it (to files local to that module or to other external modules)
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.BicepExternalSourceDocumentLinkHandler.#ctor(Bicep.Core.Registry.IModuleDispatcher,OmniSharp.Extensions.LanguageServer.Protocol.Server.ILanguageServerFacade,Bicep.LanguageServer.Telemetry.ITelemetryProvider)">
+            <summary>
+            This handles the case where the document is a source file from an external module, and we've been asked to return nested links within it (to files local to that module or to other external modules)
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepExternalSourceRequestHandler">
+            <summary>
+            Handles textDocument/bicepExternalSource LSP requests. These are sent by clients that are resolving contents of document URIs using the bicep-extsrc: scheme.
+            The BicepDefinitionHandler returns such URIs when definitions are inside modules that reside in the local module cache.
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.BicepExternalSourceRequestHandler.GetExternalSourceLinkUri(Bicep.Core.Registry.Oci.OciArtifactReference,Bicep.Core.SourceCode.SourceArchive)">
+            <summary>
+            Creates a bicep-extsrc: URI for a given module's source file to give to the client to use as a document URI.  (Client will then
+              ask for us the source code via a textDocument/externalSource request).
+            </summary>
+            <param name="reference">The module reference</param>
+            <param name="sourceArchive">The source archive for the module, if sources are available</param>
+            <returns>A bicep-extsrc: URI</returns>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.BicepGetRecommendedConfigLocationHandler">
+            <summary>
+            Retrieves the recommended folder to place a new bicepconfig.json file (used by client)
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Handlers.ExternalSourceReference">
+            <summary>
+            Represents a URI to request displaying a source file from an external module
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.ExternalSourceReference.#ctor(System.String,System.String,System.String)">
+            <summary>
+            This constructor is used when we are receiving a request from vscode to display a source file from an external module.
+            </summary>
+            <param name="fullTitle"></param>
+            <param name="fullyQualifiedModuleReference"></param>
+            <param name="requestedFile"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.ExternalSourceReference.ExternalModulePathRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>\\&lt;cache\\&gt;\\/br\\/\n.*\n\\$(?&lt;repoName&gt;[^\\/\\$]+)\n\\/(?&lt;tag&gt;[^\\/\\$]+)\\$[^\\/\\$]*\n\\/(?&lt;filename&gt;[^\\/]+)$            </code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnorePatternWhitespace</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match the string "&lt;cache&gt;/br/".<br/>
+            ○ Match a character other than '\n' greedily any number of times.<br/>
+            ○ Match '$'.<br/>
+            ○ "repoName" capture group.<br/>
+                ○ Match a character in the set [^$/] atomically at least once.<br/>
+            ○ Match '/'.<br/>
+            ○ "tag" capture group.<br/>
+                ○ Match a character in the set [^$/] atomically at least once.<br/>
+            ○ Match '$'.<br/>
+            ○ Match a character in the set [^$/] atomically any number of times.<br/>
+            ○ Match '/'.<br/>
+            ○ "filename" capture group.<br/>
+                ○ Match a character other than '/' greedily at least once.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:Bicep.LanguageServer.Handlers.InsertResourceHandler.UnifiedNamePattern">
+            <remarks>
+            Pattern:<br/>
+            <code>[^a-zA-Z]</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [^A-Za-z].<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:Bicep.LanguageServer.LangServerResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+              This class was generated by MSBuild using the GenerateResource task.
+              To add or remove a member, edit your .resx file then rerun MSBuild.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.Decompile_CreatedNewSubfolder">
+            <summary>
+              Looks up a localized string similar to Created new subfolder for output files: {0}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.Decompile_DecompilationFailed">
+            <summary>
+              Looks up a localized string similar to Decompilation failed. Please fix the following problems and try again: {0}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.Decompile_DecompilationStartMsg">
+            <summary>
+              Looks up a localized string similar to Decompiling {0} into Bicep....
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.DeploymentFailedMessage">
+            <summary>
+              Looks up a localized string similar to Deployment failed for {0}..
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.DeploymentFailedWithExceptionMessage">
+            <summary>
+              Looks up a localized string similar to Deployment failed for {0}. {1}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.DeploymentStartedMessage">
+            <summary>
+              Looks up a localized string similar to Deployment started for {0}..
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.DeploymentSucceededMessage">
+            <summary>
+              Looks up a localized string similar to Deployment succeeded for {0}..
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.DisableDiagnosticForThisLine">
+            <summary>
+              Looks up a localized string similar to Disable {0} for this line.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.EditLinterRuleActionTitle">
+            <summary>
+              Looks up a localized string similar to Edit {0} in bicepconfig.json.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.InvalidParameterFile">
+            <summary>
+              Looks up a localized string similar to Encountered error while reading parameters file: {0}. Please fix the following issue: {1}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.InvalidParameterFileDeploymentFailedMessage">
+            <summary>
+              Looks up a localized string similar to Deployment failed for {0}. Please fix following issues in the parameter file {1}: {2}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.InvalidParameterValueDeploymentFailedMessage">
+            <summary>
+              Looks up a localized string similar to Deployment failed for {0}. Please provide a valid value for parameter: {1}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.MissingLocationDeploymentFailedMessage">
+            <summary>
+              Looks up a localized string similar to Deployment failed for {0}. Please provide a valid location..
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.MissingParamValueForArrayOrObjectType">
+            <summary>
+              Looks up a localized string similar to Parameters of type array or object should either contain a default value or must be specified in parameters.json file. Please update the value for the following parameters: {0}.
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.UnsupportedTargetScopeMessage">
+            <summary>
+              Looks up a localized string similar to Unsupported target scope: {0}..
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.LangServerResources.ViewDeploymentInPortalMessage">
+            <summary>
+              Looks up a localized string similar to View deployment in portal: {0}..
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Providers.AzureContainerRegistriesProvider">
+            <summary>
+            This provider fetches all the Azure Container Registries (ACR) names that the user has access to via Azure
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Providers.BicepCompilationProvider">
+            <summary>
+            Creates compilation contexts.
+            </summary>
+            <remarks>This class exists only so we can mock fatal exceptions in tests.</remarks>
+        </member>
+        <member name="P:Bicep.LanguageServer.Providers.SymbolResolutionResult.Symbol">
+            <summary>
+            Gets the resolved symbol
+            </summary>
+        </member>
+        <member name="P:Bicep.LanguageServer.Providers.SymbolResolutionResult.Origin">
+            <summary>
+            Gets the syntax node that corresponds to the specified position.
+            </summary>
+        </member>
+        <member name="M:Bicep.LanguageServer.Registry.ModuleRestoreScheduler.RequestModuleRestore(Bicep.LanguageServer.CompilationManager.ICompilationManager,OmniSharp.Extensions.LanguageServer.Protocol.DocumentUri,System.Collections.Generic.IEnumerable{Bicep.Core.Registry.ArtifactReference})">
+            <summary>
+            Requests that the specified modules be restored to the local file system.
+            Does not wait for the operation to complete and returns immediately.
+            </summary>
+            <param name="compilationManager"></param>
+            <param name="artifacts">The artifacts</param>
+            <param name="documentUri">The document URI that needs to be recompiled once restore completes asynchronously</param>
+        </member>
+        <member name="M:Bicep.LanguageServer.SemanticTokenVisitor.AddContextualKeyword(Bicep.Core.Parsing.IPositionable,System.String)">
+            <summary>
+            Adds the specified positionable element if it represents the specified keyword.
+            This function only needs to be used if the parser does not prevent SkippedTriviaSyntax in place of the keyword.
+            </summary>
+            <param name="positionable">the positionable element</param>
+            <param name="keyword">the expected keyword text</param>
+        </member>
+        <member name="T:Bicep.LanguageServer.Settings.ConfigurationSettingsHandler">
+            <summary>
+            Handles settings change notification from client.
+            </summary>
+        </member>
+        <member name="T:Bicep.LanguageServer.Settings.SettingsProvider">
+            <summary>
+            Provider used to cache settings information received from <see cref="T:Bicep.LanguageServer.Settings.ConfigurationSettingsHandler"/>
+            </summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.RegexResourceType_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the RegexResourceType method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.RegexResourceType_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.RegexResourceType_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.RegexResourceType_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.RegexResourceType_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.RegexResourceType_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.RegexResourceType_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.RegexResourceType_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.RegexResourceType_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the ExternalModulePathRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.ExternalModulePathRegex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the UnifiedNamePattern method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.UnifiedNamePattern_2.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
+            <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
+        </member>
+    </members>
+</doc>
