@@ -103,7 +103,7 @@ vim.o.tabstop = 3
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -134,7 +134,7 @@ vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 500
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -565,6 +565,12 @@ require('lazy').setup({
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      vim.lsp.set_log_level 'debug'
+      vim.cmd [[ autocmd BufNewFile,BufRead *.bicep set filetype=bicep ]]
+      vim.cmd [[ autocmd BufRead,BufNewFile *.jq set filetype=jq ]]
+
+      --Enable (broadcasting) snippet capability for completion
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -575,38 +581,70 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local bicep_lsp_bin = '/Users/mclacore/.config/nvim/pack/bicep-lsp/src/Bicep.LangServer.dll'
       local servers = {
         -- clangd = {},
         azure_pipelines_ls = {},
-        bashls = {},
-        bicep = {},
-        dockerls = {},
-        elixirls = {},
-        eslint = {},
-        golangci_lint_ls = {},
-        gopls = {},
-        graphql = {},
-        helm_ls = {},
-        html = {},
-        jqls = {},
-        jsonls = {},
-        markdown_oxide = {},
-        markdownlint = {},
-        powershell_es = {},
-        pylsp = {},
-        pyright = {},
-        quick_lint_js = {},
-        ruby_lsp = {},
-        sqlls = {},
-        swift_mesonls = {},
-        terraformls = {
-          cmd = { 'terraform-ls', 'serve' },
-          filetypes = { 'terraform', 'tf', 'tfvars', 'tfstate' },
+        bashls = {
+          cmd = { 'bash-language-server', 'start' },
+          filetypes = { 'sh', 'zsh' },
+          root_dir = require('lspconfig').util.find_git_ancestor,
         },
-        tsserver = {},
-        textlsp = {},
-        tflint = {},
-        yamlls = {},
+        bicep = {
+          cmd = { 'dotnet', bicep_lsp_bin },
+          filetypes = { 'bicep' },
+          root_dir = require('lspconfig').util.root_pattern '.git',
+        },
+        dockerls = {
+          cmd = { 'docker-langserver', '--stdio' },
+          filetypes = { 'Dockerfile', 'dockerfile' },
+          root_dir = require('lspconfig').util.root_pattern 'Dockerfile',
+        },
+        gopls = {
+          cmd = { 'gopls' },
+          filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+          root_dir = require('lspconfig').util.root_pattern('.git', 'go.mod', '.go.work'),
+        },
+        jqls = {
+          cmd = { 'jq-lsp' },
+          filetypes = { 'jq' },
+          root_dir = require('lspconfig').util.find_git_ancestor,
+        },
+        marksman = {
+          cmd = { 'marksman', 'server' },
+          filetypes = { 'markdown', 'markdown.mdx' },
+          root_dir = require('lspconfig').util.root_pattern('.git', '.marksman.toml'),
+        },
+        pylsp = {
+          cmd = { 'pylsp' },
+          filetypes = { 'python' },
+          root_dir = require('lspconfig').util.root_pattern('.git', 'setup.py', 'setup.cfg', 'pyproject.toml'),
+        },
+        pyright = {
+          cmd = { 'pyright-langserver', '--stdio' },
+          filetypes = { 'python' },
+        },
+        quick_lint_js = {
+          cmd = { 'quick-lint-js', '--lsp-server' },
+          filetypes = { 'javascript', 'typescript' },
+        },
+        ruby_lsp = {
+          cmd = { 'ruby-lsp' },
+          filetypes = { 'ruby' },
+          init_options = {
+            formatter = 'auto',
+          },
+        },
+        sqlls = {
+          cmd = { 'sql-language-server', 'up', '--method', 'stdio' },
+          filetypes = { 'sql', 'mysql' },
+          root_dir = require('lspconfig').util.root_pattern('.git', '.sqlconfig'),
+        },
+        tflint = {
+          cmd = { 'tflint', '--langserver' },
+          filetypes = { 'terraform' },
+          root_dir = require('lspconfig').util.root_pattern('.git', '.terraform', '.tflint.hcl'),
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -678,7 +716,7 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
+      notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
@@ -692,29 +730,33 @@ require('lazy').setup({
       formatters_by_ft = {
         bash = { 'beautysh' },
         bicep = { 'custom_bicep_fmt' },
-        go = { 'goimports', 'gofumpt', 'gotests' },
-        hcl = { 'hclfmt' },
-        html = { 'prettierd', 'prettier', 'html-beautifier' },
+        go = { 'gofumpt' },
+        html = { 'prettierd', 'prettier' },
         javascript = { 'prettierd', 'prettier' },
         javascriptreact = { 'prettierd', 'prettier' },
-        jq = { 'jq' },
-        json = { 'prettierd', 'prettier', 'jq', 'jsonnetfmt', 'fixjson' },
+        json = { 'prettierd', 'prettier', 'jq' },
         lua = { 'stylua' },
-        markdown = { 'prettierd', 'prettier', 'markdownlint', 'mdformat' },
+        markdown = { 'prettierd', 'prettier', 'markdownlint' },
         python = { 'isort', 'black' },
         ruby = { 'rubocop' },
-        terraform = { 'tofu_fmt', 'terraform_fmt' },
+        terraform = { 'tofu_fmt' },
         toml = { 'taplo' },
-        typescript = { 'prettierd', 'prettier', 'ts-standard' },
+        typescript = { 'prettierd', 'prettier' },
         typescriptreact = { 'prettierd', 'prettier' },
-        yaml = { 'prettierd', 'prettier', 'yamlfix', 'yamlfmt' },
       },
       formatters = {
         custom_bicep_fmt = {
           command = 'az', --az bicep format --file template.bicep
           args = { 'bicep', 'format', '--file', '$FILENAME' },
           stdin = false,
-          timeout = 5000,
+          cwd = function(ctx)
+            return vim.fn.fnamemodify(ctx.filename, ':p:h')
+          end,
+          tmpfile_format = '.conform.$RANDOM.$FILENAME',
+          exit_codes = { 0 },
+          condition = function(ctx)
+            return vim.fn.fnamemodify(ctx.filename, ':e') == 'bicep'
+          end,
         },
       },
     },
@@ -915,7 +957,7 @@ require('lazy').setup({
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
-      --  - ci'  - [C]hange [I]nside [']quote
+      --  - vi'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
@@ -923,6 +965,7 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
+      vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
       require('mini.surround').setup()
 
       -- Simple and easy statusline.
