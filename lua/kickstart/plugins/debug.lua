@@ -67,11 +67,11 @@ return {
         icons = {
           pause = '⏸',
           play = '▶',
-          step_into = '⏎',
+          step_into = '⏩',
           step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
+          step_out = '⏎',
+          step_back = '⏪',
+          run_last = '⏮',
           terminate = '⏹',
           disconnect = '⏏',
         },
@@ -87,6 +87,14 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup {
+      dap_configurations = {
+        {
+          type = 'go',
+          name = 'Attach remote',
+          mode = 'remote',
+          request = 'attach',
+        },
+      },
       delve = {
         -- On Windows delve must be run attached or it crashes.
         -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
