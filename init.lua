@@ -584,7 +584,6 @@ require('lazy').setup({
       local bicep_lsp_bin = '/Users/mclacore/.config/nvim/pack/bicep-lsp/src/Bicep.LangServer.dll'
       local servers = {
         -- clangd = {},
-        azure_pipelines_ls = {},
         bashls = {
           cmd = { 'bash-language-server', 'start' },
           filetypes = { 'sh', 'zsh' },
@@ -627,18 +626,6 @@ require('lazy').setup({
         quick_lint_js = {
           cmd = { 'quick-lint-js', '--lsp-server' },
           filetypes = { 'javascript', 'typescript' },
-        },
-        ruby_lsp = {
-          cmd = { 'ruby-lsp' },
-          filetypes = { 'ruby' },
-          init_options = {
-            formatter = 'auto',
-          },
-        },
-        sqlls = {
-          cmd = { 'sql-language-server', 'up', '--method', 'stdio' },
-          filetypes = { 'sql', 'mysql' },
-          root_dir = require('lspconfig').util.root_pattern('.git', '.sqlconfig'),
         },
         tflint = {
           cmd = { 'tflint', '--langserver' },
@@ -738,11 +725,11 @@ require('lazy').setup({
         lua = { 'stylua' },
         markdown = { 'prettierd', 'prettier', 'markdownlint' },
         python = { 'isort', 'black' },
-        ruby = { 'rubocop' },
         terraform = { 'tofu_fmt' },
         toml = { 'taplo' },
         typescript = { 'prettierd', 'prettier' },
         typescriptreact = { 'prettierd', 'prettier' },
+        yaml = { 'prettierd', 'prettier' },
       },
       formatters = {
         custom_bicep_fmt = {
@@ -758,6 +745,10 @@ require('lazy').setup({
             return vim.fn.fnamemodify(ctx.filename, ':e') == 'bicep'
           end,
         },
+        -- tofu_fmt = {
+        --   command = 'tofu',
+        --   args = { 'fmt' },
+        -- },
       },
     },
   },
