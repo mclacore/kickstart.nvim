@@ -228,7 +228,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'github/copilot.vim',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -587,37 +586,37 @@ require('lazy').setup({
         bashls = {
           cmd = { 'bash-language-server', 'start' },
           filetypes = { 'sh', 'zsh' },
-          root_dir = require('lspconfig').util.find_git_ancestor,
+          -- root_dir = require('lspconfig').util.find_git_ancestor,
         },
         bicep = {
           cmd = { 'dotnet', bicep_lsp_bin },
           filetypes = { 'bicep' },
-          root_dir = require('lspconfig').util.root_pattern '.git',
+          -- root_dir = require('lspconfig').util.root_pattern '.git',
         },
         dockerls = {
           cmd = { 'docker-langserver', '--stdio' },
           filetypes = { 'Dockerfile', 'dockerfile' },
-          root_dir = require('lspconfig').util.root_pattern 'Dockerfile',
+          -- root_dir = require('lspconfig').util.root_pattern 'Dockerfile',
         },
         gopls = {
           cmd = { 'gopls' },
           filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
-          root_dir = require('lspconfig').util.root_pattern('.git', 'go.mod', '.go.work'),
+          -- root_dir = require('lspconfig').util.root_pattern('.git', 'go.mod', '.go.work'),
         },
         jqls = {
           cmd = { 'jq-lsp' },
           filetypes = { 'jq' },
-          root_dir = require('lspconfig').util.find_git_ancestor,
+          -- root_dir = require('lspconfig').util.find_git_ancestor,
         },
         marksman = {
           cmd = { 'marksman', 'server' },
           filetypes = { 'markdown', 'markdown.mdx' },
-          root_dir = require('lspconfig').util.root_pattern('.git', '.marksman.toml'),
+          -- root_dir = require('lspconfig').util.root_pattern('.git', '.marksman.toml'),
         },
         pylsp = {
           cmd = { 'pylsp' },
           filetypes = { 'python' },
-          root_dir = require('lspconfig').util.root_pattern('.git', 'setup.py', 'setup.cfg', 'pyproject.toml'),
+          -- root_dir = require('lspconfig').util.root_pattern('.git', 'setup.py', 'setup.cfg', 'pyproject.toml'),
         },
         pyright = {
           cmd = { 'pyright-langserver', '--stdio' },
@@ -627,15 +626,19 @@ require('lazy').setup({
           cmd = { 'quick-lint-js', '--lsp-server' },
           filetypes = { 'javascript', 'typescript' },
         },
+        sqlls = {
+          cmd = { 'sql-language-server', 'up', '--method', 'stdio' },
+          filetypes = { 'sql', 'mysql' },
+        },
         tflint = {
           cmd = { 'tflint', '--langserver' },
           filetypes = { 'terraform' },
-          root_dir = require('lspconfig').util.root_pattern('.git', '.terraform', '.tflint.hcl'),
+          -- root_dir = require('lspconfig').util.root_pattern('.git', '.terraform', '.tflint.hcl'),
         },
         yamlls = {
           cmd = { 'yaml-language-server', '--stdio' },
           filetypes = { 'yaml' },
-          root_dir = require('lspconfig').util.root_pattern('.git', '.yaml', '.yamlls'),
+          -- root_dir = require('lspconfig').util.root_pattern('.git', '.yaml', '.yamlls'),
         },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -709,16 +712,16 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = true,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+      -- format_on_save = function(bufnr)
+      --   -- Disable "format_on_save lsp_fallback" for languages that don't
+      --   -- have a well standardized coding style. You can add additional
+      --   -- languages here or re-enable it for the disabled ones.
+      --   local disable_filetypes = { c = true, cpp = true, terraform = true }
+      --   return {
+      --     timeout_ms = 500,
+      --     lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+      --   }
+      -- end,
       formatters_by_ft = {
         bash = { 'beautysh' },
         bicep = { 'custom_bicep_fmt' },
@@ -728,13 +731,14 @@ require('lazy').setup({
         javascriptreact = { 'prettierd', 'prettier' },
         json = { 'prettierd', 'prettier', 'jq' },
         lua = { 'stylua' },
-        markdown = { 'prettierd', 'prettier', 'markdownlint' },
-        python = { 'isort', 'black' },
+        markdown = { 'markdownlint' },
+        python = { 'isort' },
+        sql = { 'sqlfmt' },
         terraform = { 'tofu_fmt' },
         toml = { 'taplo' },
         typescript = { 'prettierd', 'prettier' },
         typescriptreact = { 'prettierd', 'prettier' },
-        yaml = { 'prettierd', 'prettier' },
+        yaml = { 'yamlfix' },
       },
       formatters = {
         custom_bicep_fmt = {
